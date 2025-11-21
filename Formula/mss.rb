@@ -27,8 +27,8 @@ class Mss < Formula
 
     # Install pkg-config file
     # Generate from template
-    inreplace "mss.pc.in", "@PREFIX@", prefix
-    inreplace "mss.pc.in", "@VERSION@", version
+    inreplace "mss.pc.in", "@PREFIX@", prefix.to_s
+    inreplace "mss.pc.in", "@VERSION@", version.to_s
     (lib/"pkgconfig").install "mss.pc.in" => "mss.pc"
   end
 

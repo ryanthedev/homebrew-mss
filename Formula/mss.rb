@@ -7,7 +7,8 @@ class Mss < Formula
   version "0.0.6"
 
   depends_on :macos => :big_sur
-  depends_on xcode: :build
+  # NOTE: Xcode NOT required! v0.0.6+ uses -undefined dynamic_lookup
+  # which allows building with Command Line Tools only (xcode-select --install)
 
   def install
     # Build library
@@ -38,12 +39,17 @@ class Mss < Formula
         Headers: #{include}/mss.h, #{include}/mss_types.h
         CLI:     #{bin}/mss
 
+      Build requirements:
+        ✓ Xcode Command Line Tools only (xcode-select --install)
+        ✗ Full Xcode.app NOT required
+
       To use in your projects:
         # With pkg-config
         gcc myapp.c $(pkg-config --cflags --libs mss) -o myapp
 
         # Or manually
         gcc myapp.c -I#{include} -L#{lib} -lmss \\
+            -undefined dynamic_lookup \\
             -framework Cocoa -framework CoreGraphics -o myapp
 
       IMPORTANT: Runtime requires a scripting addition to be loaded into Dock.app
@@ -96,6 +102,7 @@ class Mss < Formula
     system ENV.cc, "test.c",
            "-I#{include}",
            "-L#{lib}", "-lmss",
+           "-undefined", "dynamic_lookup",
            "-framework", "Cocoa",
            "-framework", "CoreGraphics",
            "-o", "test"
